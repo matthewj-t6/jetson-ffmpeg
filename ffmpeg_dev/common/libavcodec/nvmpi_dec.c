@@ -94,6 +94,18 @@ static int nvmpi_init_decoder(AVCodecContext *avctx){
 		av_log(avctx, AV_LOG_ERROR, "Failed to nvmpi_create_decoder (code = %d).\n", AVERROR_EXTERNAL);
 		return AVERROR_EXTERNAL;
 	}
+
+    //rtsp fix
+	if(avctx->extradata_size){
+		nvPacket packet;
+		int res;
+
+		packet.payload_size=avctx->extradata_size;
+		packet.payload=avctx->extradata;
+		packet.pts=0;
+
+		res=nvmpi_decoder_put_packet(nvmpi_context->ctx,&packet);
+	}
    return 0;
 
 }
